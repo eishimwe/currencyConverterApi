@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePurchasableCurrenciesTable extends Migration
+class CreatePaymentCurrenciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePurchasableCurrenciesTable extends Migration
      */
     public function up()
     {
-        Schema::create('purchasable_currencies', function (Blueprint $table) {
+        Schema::create('payment_currencies', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('currency_id');
             $table->foreign('currency_id')->references('id')->on('currencies');
@@ -28,6 +28,6 @@ class CreatePurchasableCurrenciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchasable_currencies');
+        Schema::dropIfExists('payment_currencies');
     }
 }
