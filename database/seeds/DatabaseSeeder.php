@@ -1,16 +1,20 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
+    protected $toTruncate = [ 'currencies'];
+
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        foreach($this->toTruncate as $table) {
+
+            DB::table($table)->delete();
+
+        }
+
+        $this->call(CurrenciesTableSeeder::class);
     }
 }
