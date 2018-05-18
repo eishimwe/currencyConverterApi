@@ -9,7 +9,7 @@
 namespace App;
 
 
-class CurrencyRepository
+class CurrencyRepository implements RepositoryInterface
 {
     protected $currency;
 
@@ -22,6 +22,11 @@ class CurrencyRepository
 
         return $this->currency->create($data);
 
+    }
+
+    public function getCurrencyByCode($code){
+
+        return $this->currency->where('code',$code)->first();
     }
 
 }

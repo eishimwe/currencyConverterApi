@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    protected $toTruncate = [ 'currencies'];
+    protected $toTruncate = [ 'purchasable_currencies','currencies'];
 
     public function run()
     {
@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call(CurrenciesTableSeeder::class);
+        $this->call(PurchasableCurrenciesTableSeeder::class);
     }
 }
