@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +15,15 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1','middleware' => []], function()
+
+{
+
+    Route::get('currencies','CurrencyController@index');
+
+    Route::post('quote','CurrencyController@quote');
+
+    Route::post('order','CurrencyController@order');
+
+
 });
