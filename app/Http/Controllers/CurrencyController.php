@@ -58,7 +58,7 @@ class CurrencyController extends Controller
 
         $this->currency->updateCurrency($rates);
 
-
+        return response(['success' => 'true','data' => $rates ],200);
     }
 
     protected function getApiRates(){

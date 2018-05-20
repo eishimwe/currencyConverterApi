@@ -38,3 +38,10 @@ In the root directory of the cloned project.Use Different Terminal Session
 ```bash
 $ php artisan queue:listen
 ```
+
+### Step 6
+In order to update currency rates please hit the below url in your browser
+
+```bash
+$ http://127.0.0.1:8000/api/v1/updateRates
+```
