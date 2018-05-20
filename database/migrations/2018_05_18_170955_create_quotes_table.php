@@ -19,7 +19,7 @@ class CreateQuotesTable extends Migration
             $table->unsignedInteger('foreign_currency_id');
             $table->foreign('foreign_currency_id')->references('id')->on('currencies');
             $table->double('exchange_rate');
-            $table->float('surcharge_percentage');
+            $table->float('surcharge_percentage')->nullable();
             $table->double('purchased_amount_foreign_currency');
             $table->double('paid_amount_usd');
             $table->double('surcharged_amount');

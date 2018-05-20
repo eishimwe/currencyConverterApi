@@ -32,11 +32,6 @@ class CurrencyRatesTableSeeder extends Seeder
                 'rate'                 => 13.3054,
                 'surcharge_percentage' =>  7.5
             ],
-            [
-                'from_currency_id' => $zarCurrency,
-                'to_currency_id'   => $usdCurrency,
-                'rate'             => (1 /13.3054)
-            ],
 
             [
                 'from_currency_id'     => $usdCurrency,
@@ -45,31 +40,18 @@ class CurrencyRatesTableSeeder extends Seeder
                 'surcharge_percentage' =>  5
             ],
             [
-                'from_currency_id' => $gpCurrency,
-                'to_currency_id'   => $usdCurrency,
-                'rate'             => (1 / 0.651178)
-            ],
-            [
                 'from_currency_id' => $usdCurrency,
                 'to_currency_id'   => $euCurrency,
                 'rate'             => 0.884872,
-                'surcharge_percentage' =>  5
+                'surcharge_percentage' =>  5,
+
             ],
             [
-                'from_currency_id' => $euCurrency,
-                'to_currency_id'   => $usdCurrency,
-                'rate'             => (1 / 0.884872)
-            ],
-            [
-                'from_currency_id' => $usdCurrency,
-                'to_currency_id'   => $kesCurrency,
-                'rate'             => 103.860,
-                'surcharge_percentage' =>  5
-            ],
-            [
-                'from_currency_id' => $kesCurrency,
-                'to_currency_id'   => $usdCurrency,
-                'rate'             => (1 / 103.860)
+                'from_currency_id'     => $usdCurrency,
+                'to_currency_id'       => $kesCurrency,
+                'rate'                 => 103.860,
+                'surcharge_percentage' =>  2.5,
+
             ]
 
         ];

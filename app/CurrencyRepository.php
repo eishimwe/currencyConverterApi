@@ -9,28 +9,31 @@
 namespace App;
 
 
+
 class CurrencyRepository implements RepositoryInterface
 {
-    protected $currency,$paymentCurrency,$purchasableCurrency,$currencyRate,$currencyQuote,$currencyOrder;
+    protected $currency,$paymentCurrency,$purchasableCurrency,$currencyRate,$currencyQuote,$currencyOrder,$comm;
 
-    function __construct(Currency $currency,PaymentCurrency $paymentCurrency,
-                         PurchasableCurrency $purchasableCurrency,
-                         CurrencyRateRepository $currencyRate,
-                         QuoteRepository $currencyQuote,
-                         OrderRepository $currencyOrder)
+    function __construct(Currency $currency)
     {
         $this->currency            = $currency;
-        $this->paymentCurrency     = $paymentCurrency;
-        $this->purchasableCurrency = $purchasableCurrency;
-        $this->currencyRate        = $currencyRate;
-        $this->currencyQuote       = $currencyQuote;
-        $this->currencyOrder       = $currencyOrder;
+        $this->paymentCurrency     = new PaymentCurrencyRepository(new PaymentCurrency);
+        $this->purchasableCurrency = new PurchasableCurrencyRepository(new PurchasableCurrency);
+        $this->currencyRate        = new CurrencyRateRepository(new CurrencyRate);
+        $this->currencyQuote       = new QuoteRepository(new Quote);
+        $this->currencyOrder       = new OrderRepository(new Order);
+
     }
 
     public function store($data){
 
         return $this->currency->create($data);
 
+    }
+
+    function find($id){
+
+        return $this->currency->find($id);
     }
 
     public function getCurrencyByCode($code){
@@ -64,7 +67,7 @@ class CurrencyRepository implements RepositoryInterface
         return $this->purchasableCurrency->get()->toArray();
     }
 
-    public function quote($data){
+    public function quoteUsdForeign($data){
 
 
         $params = [
@@ -75,11 +78,11 @@ class CurrencyRepository implements RepositoryInterface
 
         ];
 
-        return $this->calculateQuote($params);
+        return $this->calculateQuoteUsdForeign($params);
 
     }
 
-    protected function calculateQuote($params){
+    protected function calculateQuoteUsdForeign($params){
 
         $currencyRateObj = $this->currencyRate->getRateByCode($params['from'],$params['to']);
         $subTotal        = $currencyRateObj->rate * $params['amount'];
@@ -103,10 +106,84 @@ class CurrencyRepository implements RepositoryInterface
        return $this->currencyQuote->store($data);
     }
 
-    public function order($data){
+    public function quoteForeignUsd($data){
 
-        return $this->currencyOrder->store($data);
+
+        $params = [
+
+            'from' => $this->getCurrencyByCode($data['from'])->id,
+            'to'   => $this->getCurrencyByCode($data['to'])->id,
+            'amount'   => $data['amount'],
+
+        ];
+
+        return $this->calculateQuoteForeignUsd($params);
 
     }
+
+
+    protected function calculateQuoteForeignUsd($params){
+
+        $currencyRateObj = $this->currencyRate->getRateByCode($params['to'],$params['from']);
+        $surCharge       = ($params['amount'] * $currencyRateObj->surcharge_percentage)/100;
+        $total           = ($params['amount'] - $surCharge) / $currencyRateObj->rate;
+
+        $quote['foreign_currency_id']               = $currencyRateObj->to_currency_id;
+        $quote['exchange_rate']                     = $currencyRateObj->rate;
+        $quote['surcharge_percentage']              = $currencyRateObj->surcharge_percentage;
+        $quote['purchased_amount_foreign_currency'] = $params['amount'];
+        $quote['paid_amount_usd']                   = $total;
+        $quote['surcharged_amount']                 = $surCharge;
+
+        $quote = $this->saveQuote($quote);
+
+        return ['amount' => $total,'id' => $quote->id] ;
+    }
+
+    public function order($data){
+
+
+        $quote                = $this->currencyQuote->find($data['quote_id']);
+
+        $currency             = $this->currency->find($quote->foreign_currency_id);
+
+        $orderImplementation  = 'App\\'.$currency->code.'Order';
+
+        $order                = (new $orderImplementation($this->currencyOrder))->placeOrder($quote);
+
+        return $order;
+
+    }
+
+    public function updateCurrency($rates){
+
+        $currentRates = $this->currencyRate->get();
+
+        foreach ($currentRates as $currencyRate){
+
+            if($currencyRate->currency->code == 'GBP'){
+
+                $this->currencyRate->update($currencyRate->id,['rate' => $rates->USDGBP]);
+            }
+            if($currencyRate->currency->code == 'ZAR'){
+
+                $this->currencyRate->update($currencyRate->id,['rate' => $rates->USDZAR]);
+            }
+
+            if($currencyRate->currency->code == 'EUR'){
+
+                $this->currencyRate->update($currencyRate->id,['rate' => $rates->USDEUR]);
+            }
+
+            if($currencyRate->currency->code == 'KES'){
+
+                $this->currencyRate->update($currencyRate->id,['rate' => $rates->USDKES]);
+            }
+        }
+
+
+    }
+
+
 
 }

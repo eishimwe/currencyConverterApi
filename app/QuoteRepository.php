@@ -24,4 +24,9 @@ class QuoteRepository implements RepositoryInterface
         return $this->quote->create($data);
     }
 
+    function find($id){
+
+        return $this->quote->find($id);
+    }
+
 }

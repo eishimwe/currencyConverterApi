@@ -28,4 +28,14 @@ class CurrencyRateRepository implements RepositoryInterface
         return $this->currencyRate->where('from_currency_id',$from_id)->where('to_currency_id',$to_id)->first();
     }
 
+    public function get(){
+
+        return $this->currencyRate->get();
+    }
+
+    public function update($id,$data){
+
+        return $this->currencyRate->where('id',$id)->update($data);
+    }
+
 }

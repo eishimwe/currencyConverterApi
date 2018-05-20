@@ -21,9 +21,13 @@ Route::group(['prefix' => 'v1','middleware' => []], function()
 
     Route::get('currencies','CurrencyController@index');
 
-    Route::post('quote','CurrencyController@quote');
+    Route::post('quoteUsdForeign','CurrencyController@quoteUsdForeign');
+
+    Route::post('quoteForeignUsd','CurrencyController@quoteForeignUsd');
 
     Route::post('order','CurrencyController@order');
+
+    Route::get('updateRates','CurrencyController@updateRates');
 
 
 });

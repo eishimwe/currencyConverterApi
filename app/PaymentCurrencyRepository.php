@@ -27,4 +27,9 @@ class PaymentCurrencyRepository implements RepositoryInterface
         return $this->currency->create($data);
     }
 
+    function get(){
+
+        return $this->currency->get();
+    }
+
 }

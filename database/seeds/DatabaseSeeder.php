@@ -9,7 +9,14 @@ class DatabaseSeeder extends Seeder
                                 'payment_currencies',
                                 'purchasable_currencies',
                                 'currency_rates',
-                                'currencies'];
+                                'order_discounts',
+                                'orders',
+                                'quotes',
+                                'discount_rates',
+                                'currencies',
+                                'comms'
+
+                                 ];
 
     public function run()
     {
@@ -23,5 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PurchasableCurrenciesTableSeeder::class);
         $this->call(PaymentCurrenciesTableSeeder::class);
         $this->call(CurrencyRatesTableSeeder::class);
+        $this->call(CommsTableSeeder::class);
+        $this->call(DiscountRateTableSeeder::class);
     }
 }
